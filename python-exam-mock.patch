@@ -1,0 +1,91 @@
+--- exam-0.10.6/setup.py.orig	2016-05-26 23:07:32.000000000 +0200
++++ exam-0.10.6/setup.py	2023-12-12 21:34:16.445079137 +0100
+@@ -8,7 +8,10 @@ try:
+ except ImportError:
+     pass
+ 
+-install_requires = ['mock']
++install_requires = []
++if sys.version_info < (3, 0):
++    install_requires.append('mock')
++
+ lint_requires = ['pep8', 'pyflakes']
+ tests_require = ['nose']
+ 
+--- exam-0.10.6/exam/decorators.py.orig	2016-05-26 23:07:32.000000000 +0200
++++ exam-0.10.6/exam/decorators.py	2023-12-12 21:34:47.028246787 +0100
+@@ -1,6 +1,9 @@
+ from __future__ import absolute_import
+ 
+-from mock import patch
++try:
++    from unittest.mock import patch
++except ImportError:
++    from mock import patch
+ from functools import partial, wraps
+ import types
+ 
+--- exam-0.10.6/exam/helpers.py.orig	2016-05-26 23:07:32.000000000 +0200
++++ exam-0.10.6/exam/helpers.py	2023-12-12 21:35:27.308028573 +0100
+@@ -4,7 +4,10 @@ import shutil
+ import os
+ import functools
+ 
+-from mock import MagicMock, patch, call
++try:
++    from unittest.mock import MagicMock, patch, call
++except ImportError:
++    from mock import MagicMock, patch, call
+ 
+ 
+ def rm_f(path):
+--- exam-0.10.6/exam/mock.py.orig	2016-05-26 23:07:32.000000000 +0200
++++ exam-0.10.6/exam/mock.py	2023-12-12 21:36:00.807847089 +0100
+@@ -1,7 +1,11 @@
+ from __future__ import absolute_import
+ 
+-from mock import Mock as BaseMock
+-from mock import call
++try:
++    from unittest.mock import Mock as BaseMock
++    from unittest.mock import call
++except ImportError:
++    from mock import Mock as BaseMock
++    from mock import call
+ 
+ 
+ class Mock(BaseMock):
+--- exam-0.10.6/tests/test_cases.py.orig	2016-05-26 23:07:32.000000000 +0200
++++ exam-0.10.6/tests/test_cases.py	2023-12-13 21:14:40.973378253 +0100
+@@ -1,4 +1,7 @@
+-from mock import sentinel
++try:
++    from unittest.mock import sentinel
++except ImportError:
++    from mock import sentinel
+ from tests import TestCase
+ 
+ from exam.decorators import before, after, around, patcher
+--- exam-0.10.6/tests/test_helpers.py.orig	2016-05-26 23:07:32.000000000 +0200
++++ exam-0.10.6/tests/test_helpers.py	2023-12-13 21:15:08.059898179 +0100
+@@ -1,5 +1,8 @@
+ from tests import TestCase
+-from mock import patch, Mock, sentinel
++try:
++    from unittest.mock import patch, Mock, sentinel
++except ImportError:
++    from mock import patch, Mock, sentinel
+ 
+ from exam.helpers import intercept, rm_f, track, mock_import, call, effect
+ from exam.decorators import fixture
+--- exam-0.10.6/tests/test_objects.py.orig	2016-05-26 23:07:32.000000000 +0200
++++ exam-0.10.6/tests/test_objects.py	2023-12-13 21:15:30.263111227 +0100
+@@ -1,4 +1,7 @@
+-from mock import sentinel
++try:
++    from unittest.mock import sentinel
++except ImportError:
++    from mock import sentinel
+ from tests import TestCase
+ 
+ from exam.objects import always, noop
