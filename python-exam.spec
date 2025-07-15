@@ -69,7 +69,7 @@ interfejsem testów jednostkowych.
 
 %prep
 %setup -q -n exam-%{version}
-%patch0 -p1
+%patch -P0 -p1
 
 %build
 %if %{with python2}
